@@ -13,6 +13,14 @@ socket.emit('createMessage', {
 */
 })
 
+// Server with Acknowlage Emit
+socket.emit('createMessage', {
+  from: 'Duygu',
+  text: 'Mercan uyudu  Yaşasın'
+}, function(acknowlage){
+  console.log('Acknowlage Received: ', acknowlage);
+})
+
 // Listen Disconnect event
 socket.on('disconnect', function(){
   console.log('Disconnected from server.');

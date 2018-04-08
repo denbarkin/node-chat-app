@@ -19,16 +19,17 @@ io.on('connection', (socket) => {
   console.log('New user connected...');
 
   // Wellcome message from Admin
-  socket.emit('newMessage',generateMessage('Admin','Wellcome the Application'))
+  socket.emit('newMessage',generateMessage('Admin','Welcome Simple Chat App...'))
 
   // New User connected message from admin,
   socket.broadcast.emit('newMessage',generateMessage('Admin', 'Hi, New user joined...'))
 
-
   // Listen new type of event : Create Message
-  socket.on('createMessage', (message) => {
+  // Acknowlage send back to the Client to Inform the status
+  socket.on('createMessage', (message, callback) => {
     console.log("createMessage:", message)
     socket.broadcast.emit('newMessage', generateMessage(message.from,message.text))
+    callback('send from server')
   });
 
   // Once socket connected. Listen new event on this socket
