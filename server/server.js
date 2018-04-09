@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
   socket.emit('newMessage',generateMessage('Admin','Welcome Simple Chat App...'))
 
   // New User connected message from admin,
-  socket.broadcast.emit('newMessage',generateMessage('Admin', 'Hi, New user joined...'))
+  socket.broadcast.emit('newMessage',generateMessage('Admin', 'New user is joined.'))
 
   // Listen new type of event : Create Message
   // Acknowlage send back to the Client to Inform the status

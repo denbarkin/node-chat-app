@@ -2,11 +2,19 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Chat Application</title>
   </head>
   <body>
-    <p>Wellcome to chat app</p>
+    <p>Welcome to chat application</p>
+    <ol id="messages">
+
+    </ol>
+    <form id="message-form">
+      <input type="text" name="message" placeholder="Message"></input>
+      <button>Send</button>
+    </form>
     <script src="socket.io/socket.io.js" charset="utf-8"></script>
+    <script src="js/Libs/jquery-3.3.1.js"></script>
     <script src="js/index.js"></script>
   </body>
 </html>

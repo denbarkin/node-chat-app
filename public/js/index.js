@@ -3,22 +3,6 @@ var socket = io(); // Connect to server
 // Listen connect event
 socket.on('connect', function(){
   console.log('connected to server.');
-
-// Create an message send it to server when connected.
-/*
-socket.emit('createMessage', {
-    from: 'barkin',
-    text: 'Hi there!'
-  })
-*/
-})
-
-// Server with Acknowlage Emit
-socket.emit('createMessage', {
-  from: 'Duygu',
-  text: 'Mercan uyudu  Yaşasın'
-}, function(acknowlage){
-  console.log('Acknowlage Received: ', acknowlage);
 })
 
 // Listen Disconnect event
@@ -29,4 +13,21 @@ socket.on('disconnect', function(){
 // Listen Custom Event newMessage
 socket.on('newMessage', function(message){
   console.log("newMessage",message);
+  var li = jQuery('<li></li>');
+  li.text(`${message.from}: ${message.text}`);
+  jQuery('#messages').append(li);
+})
+
+// Register event to form element and prevent post default beahivour.
+jQuery('#message-form').on('submit', function(e){
+  e.preventDefault();
+
+  var text = jQuery('[name=message]').val();
+
+  socket.emit('createMessage',{
+    from: 'User',
+    text: text
+  }, function(){
+    // Acknowlage
+  })
 })
