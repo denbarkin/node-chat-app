@@ -48,14 +48,19 @@ io.on('connection', (socket) => {
   // Listen new type of event : Create Message
   // Acknowlage send back to the Client to Inform the status
   socket.on('createMessage', (message, callback) => {
-    console.log("createMessage:", message)
-    //socket.broadcast.emit('newMessage', generateMessage(message.from,message.text))
-    io.emit('newMessage', generateMessage(message.from, message.text))
-    callback();
+    var user = users.getUser(socket.id)
+
+    if(user && isRealString(message.text)){
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text))
+      callback();
+    }
   });
 
   socket.on('createGeolocation', (location) => {
-    io.emit('newLocationMessage', generateLocationMessage('Admin', location.latitude, location.longitude))
+    var user = users.getUser(socket.id);
+    if(user){
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, location.latitude, location.longitude))
+    }
   })
 
   // Once socket connected. Listen new event on this socket
