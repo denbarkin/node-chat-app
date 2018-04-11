@@ -3,7 +3,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage,generateLocationMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public')
 const port = process.env.PORT || 3000;
@@ -28,9 +28,14 @@ io.on('connection', (socket) => {
   // Acknowlage send back to the Client to Inform the status
   socket.on('createMessage', (message, callback) => {
     console.log("createMessage:", message)
-    socket.broadcast.emit('newMessage', generateMessage(message.from,message.text))
-    callback('send from server')
+    //socket.broadcast.emit('newMessage', generateMessage(message.from,message.text))
+    io.emit('newMessage', generateMessage(message.from, message.text))
+    callback();
   });
+
+  socket.on('createGeolocation', (location) => {
+    io.emit('newLocationMessage', generateLocationMessage('Admin', location.latitude, location.longitude))
+  })
 
   // Once socket connected. Listen new event on this socket
   socket.on('disconnect', (socket) => {
