@@ -1,13 +1,51 @@
 var socket = io(); // Connect to server
 
+function scrollToBottom () {
+  // Selectors
+  var messages = jQuery('#messages');
+  var newMessage = messages.children('li:last-child')
+  // Heights
+  var clientHeight = messages.prop('clientHeight');
+  var scrollTop = messages.prop('scrollTop');
+  var scrollHeight = messages.prop('scrollHeight');
+  var newMessageHeight = newMessage.innerHeight();
+  var lastMessageHeight = newMessage.prev().innerHeight();
+
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop(scrollHeight);
+  }
+}
+
+
 // Listen connect event
 socket.on('connect', function(){
   console.log('connected to server.');
+
+  var params = jQuery.deparam()
+
+  socket.emit('join', params, function(err){
+    if(err){
+      alert(err);
+      window.location.href = '/'
+    }else{
+      console.log('No Error to join room');
+    }
+  })
 })
 
 // Listen Disconnect event
 socket.on('disconnect', function(){
   console.log('Disconnected from server.');
+})
+
+socket.on('updateUserList', function(users){
+  var ol = jQuery('<ol></ol>');
+
+  users.forEach(function(user){
+    ol.append(jQuery('<li></li>').text(user));
+  })
+
+  jQuery('#users').html(ol);
 })
 
 // Listen Custom Event newMessage
@@ -22,6 +60,7 @@ socket.on('newMessage', function(message){
   });
 
   jQuery('#messages').append(html);
+  scrollToBottom();
 
   /* Without using template
   console.log("newMessage",message);
@@ -43,6 +82,7 @@ socket.on('newLocationMessage', function(message){
 
   jQuery('#messages').append(html);
 
+  scrollToBottom();
   /*
   console.log("newLocationMessage",message);
   var li = jQuery('<li></li>');
